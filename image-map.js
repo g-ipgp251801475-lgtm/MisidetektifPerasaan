@@ -4,7 +4,7 @@ window.GAME_IMAGES = {
   "briar": "assets/images/Screenshot 2026-11-06 192839.png",
   "bramble": "assets/images/Screenshot 2026-11-06 192945.png",
   "vick": "assets/images/Screenshot 2026-11-06 193001.png",
-  "level1": "assets/images/Screenshot 2026-11-06 192815.png",
+  "level1": "assets/images/Screenshot (310)(2).png",
   "map": "assets/images/Screenshot 2026-11-06 192815.png",
   "alternative": "assets/images/Screenshot (310).png",
   "level2": "assets/images/Screenshot (312).png",

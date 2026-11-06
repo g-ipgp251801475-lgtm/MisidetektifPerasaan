@@ -1,0 +1,57 @@
+[
+  {
+    "role": "welcome",
+    "filename": "welcome-briar-ms.mp3",
+    "available": false
+  },
+  {
+    "role": "level1",
+    "filename": "briar-instruction-ms.mp3",
+    "available": false
+  },
+  {
+    "role": "level2",
+    "filename": "bramble-instruction-ms.mp3",
+    "available": false
+  },
+  {
+    "role": "correct",
+    "filename": "correct-answer-ms.mp3",
+    "available": false
+  },
+  {
+    "role": "retry",
+    "filename": "try-again-ms.mp3",
+    "available": false
+  },
+  {
+    "role": "ambience",
+    "filename": "forest-ambience.mp3",
+    "available": false
+  },
+  {
+    "role": "correctSound",
+    "filename": "correct-sound.mp3",
+    "available": false
+  },
+  {
+    "role": "wrongSound",
+    "filename": "incorrect-sound.mp3",
+    "available": false
+  },
+  {
+    "role": "key",
+    "filename": "key-collection.mp3",
+    "available": false
+  },
+  {
+    "role": "chest",
+    "filename": "treasure-opening.mp3",
+    "available": false
+  },
+  {
+    "role": "win",
+    "filename": "mission-complete.mp3",
+    "available": false
+  }
+]

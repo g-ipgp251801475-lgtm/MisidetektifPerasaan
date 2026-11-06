@@ -24,3 +24,20 @@ All ten exact filenames are now present in `assets/images/` and mapped to their 
 Inspected all ten images in a contact sheet and checked actual desktop/mobile screenshots of the new homepage, map, story, sentence puzzle, correct and incorrect overlays, and victory page. The second-level card is narrower on desktop to leave the original characters visible. Main backgrounds stay fixed across all five questions per level, and mobile scene windows display the entire image without stretching or cropping faces.
 
 Audio balance, actual Malay pronunciation, physical touchscreen behaviour and the published Google Sites iframe still require device checks. Headless tests verify state and scheduling rather than audible quality. Remote source verification is performed separately during publication; local browser tests do not prove a hosted Pages deployment.
+
+
+## Final refinement validation
+
+- Added the exact uploaded `Screenshot (310)(2).png` without altering its bytes. Only the Tahap 1 image mapping changes; other background and character paths remain unchanged.
+- Uppercase desktop homepage title fits one line, mobile wraps at word boundaries, and all pages carry the same two-line identity. Whole-image character animation remains intact.
+- Tahap 1 uses Briar and the exact requested instruction throughout all five questions; Tahap 2 uses Bramble and its exact requested instruction.
+- Enlarged question text/options, guide typography, word tiles, answer zone and action buttons checked in browser. Complete scenic windows preserve all background characters alongside the enlarged cards.
+- Correct/incorrect overlays automatically request the exact Malay phrases; voice mute prevents narration. Malay-only voice selection, previous-utterance cancellation, and narration duck/restore verified with instrumented speech calls.
+- Dedicated `node tests/audio.cjs` passed real HTMLAudio playback with a test-only WAV: recording priority, replay cancellation, narration mute, effects mute, ambience mute, music duck/restore and one-time genuine Malay fallback after a failed recording.
+- Synthesized breeze source loops; bird and occasional dove calls are generated along with the instrumental melody. No missing audio URLs are requested.
+- Map retains its locks and adds the first-station glow/arrow and next-stage unlock animation. Key and unlock sound triggers remain active.
+- Normal-motion browser test confirms the chest lid transforms from closed to open, the lock disappears, and exactly two keys are visible inside. Start/open screenshots inspected. Reduced-motion final state is also open with two visible keys.
+- Full journey still produces 8/10 with one failed first attempt per level, and saves/restores existing progress and audio preferences. All five sentence answers retain automatic punctuation.
+- Phone/tablet widths 320, 390 and 768 checked without horizontal overflow; all active image and source requests succeeded with no uncaught JavaScript errors.
+
+No Malay recordings were supplied. Automatic spoken feedback is implemented, but audible pronunciation and voice quality require a device with a Malay voice or the optional recordings. Test-only WAV is not a shipped narration recording. Listening balance and physical-device behaviour remain classroom checks.

@@ -26,3 +26,7 @@ Redesign implementation and browser validation now pass using explicitly tempora
 
 ## Original asset integration completed
 Received the ten-image ZIP, inspected each original, preserved filenames and file bytes, and activated all exact mappings. The optional rafting image remains unused. Full functional and responsive validation passed with the new originals. No additional levels or scoring changes were introduced.
+
+
+## Final refinement
+Preserve questions, sentences, localStorage keys, scores and all existing image mappings except Tahap 1. Activate Screenshot (310)(2).png for every first-level question. Set Briar/Bramble as the consistent guides, enlarge interactions, unify title typography, and highlight the first map station. Add recording-first audio with a manifest of existing files, genuine Malay-only TTS feedback/replay, narration ducking and synthesized forest ambience. Animate keys, lock, lid, interior keys and victory light with a reduced-motion final state. Validate the whole journey and audio separately before updating the existing main branch.

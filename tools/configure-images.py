@@ -10,7 +10,7 @@ mapping = {
  'briar': ('Screenshot 2026-11-06 192839.png','03_briar_character.png'),
  'bramble': ('Screenshot 2026-11-06 192945.png','04_bramble_character.png'),
  'vick': ('Screenshot 2026-11-06 193001.png','05_logger_vick_character.png'),
- 'level1': ('Screenshot 2026-11-06 192815.png','02_forest_background.png'),
+ 'level1': ('Screenshot (310)(2).png','02_forest_background.png'),
  'map': ('Screenshot 2026-11-06 192815.png','02_forest_background.png'),
  'alternative': ('Screenshot (310).png','02_forest_background.png'),
  'level2': ('Screenshot (312).png','06_user_original_forest_reference.png'),

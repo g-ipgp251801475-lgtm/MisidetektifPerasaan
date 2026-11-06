@@ -6,7 +6,9 @@ A complete static Bahasa Melayu Tahun 4 educational forest adventure. No account
 
 The existing game now has a minimal animated homepage, immersive map with separate character stations, fixed distinct level backgrounds, the five worksheet situations, centred modal feedback, and punctuated sentence answers. The two-level structure, keys, first-attempt scores, saved progress and replay are preserved.
 
-All ten new original images are included unchanged in `assets/images/`, preserving their exact filenames. `image-map.js` assigns them to their intended roles; `assets/IMAGE-MAPPING.json` records the mapping and confirms original availability. The forest path also forms the map environment. `Screenshot (310).png` is retained as the optional alternative, without competing with the main scenes. Earlier supplied artwork is retained but is no longer used by the active scenes.
+All ten original redesign images and the additional Tahap 1 image are included unchanged in `assets/images/`, preserving their exact filenames. `image-map.js` assigns them to their intended roles; `assets/IMAGE-MAPPING.json` records the mapping and confirms original availability. Tahap 1 consistently uses `Screenshot (310)(2).png`. The map retains the original forest-path scene; all other scene and character image mappings are unchanged. `Screenshot (310).png` is retained as the optional alternative, without competing with the main scenes. Earlier supplied artwork is retained but is no longer used by the active scenes.
+
+The uppercase title and italic subtitle are consistent throughout. Larger activity cards preserve all existing questions and scores. The map highlights the first challenge; victory animates two keys toward the chest, releases the lock, lifts the lid and leaves both keys visible inside. Reduced-motion users see the final open state immediately.
 
 Run `python3 tools/configure-images.py` only when refreshing the image mapping. No build step is needed for normal play or hosting.
 
@@ -27,7 +29,9 @@ Each correct first attempt earns one point, maximum 10. Retries remain available
 
 ## Audio
 
-Use the Audio button for separate music, voice and effects switches and a shared volume slider. Music starts after interaction. Music/effects are original browser-generated sounds; voice is generic SpeechSynthesis, not imitation of official actors. An actual installed Malay voice is required: there is no English/default-voice fallback. If none exists, no speech is emitted and written guidance remains visible. The homepage speaker opens Briar’s welcome bubble. Teacher narration has been removed. See assets/audio/README.md for optional future recording filenames. No recordings are necessary and no broken audio links exist.
+Separate music, narration and effects switches plus volume are available on every page. The original synthesized instrumental is accompanied by gentle wind, periodic birds and an occasional quiet dove-like call. It starts after interaction. Narration automatically lowers music/ambience, cancels previous narration, and restores volume afterward.
+
+Briar guides Tahap 1; Bramble guides Tahap 2. Both feedback overlays automatically request their exact Malay phrases and offer replay. There are currently **no supplied Malay recordings**: only a genuine installed Malay browser voice is used, with no English fallback. One generic voice is shared by all character roles; separate character voices are not claimed. If unavailable, read the visible instructions. See `assets/audio/README.md` for all eleven optional filenames, exact dialogue and registration steps. Missing files are not requested.
 
 ## Files
 
@@ -36,7 +40,10 @@ index.html
 style.css
 script.js
 image-map.js
+audio.js
+audio-assets.js
 tools/configure-images.py
+tools/configure-audio.py
 assets/IMAGE-MAPPING.json
 PLAN.md
 README.md
@@ -52,7 +59,7 @@ assets/
   README.txt
   map-illustrations.svg
   audio/README.md
-  images/  # All ten new original PNG files, exact filenames preserved
+  images/  # Ten original PNGs plus Screenshot (310)(2).png; filenames preserved
 ```
 
 The ten new originals retain their names, proportions and contents. Separate map characters use neat frames to preserve the white backgrounds without damaging the source images. The complete homepage group moves as one image. No generated substitute characters or Internet images are used.
@@ -72,4 +79,4 @@ The game uses responsive layouts and internal navigation, so no additional page 
 
 ## Development checks
 
-`node --check script.js` verifies syntax. `node tests/game.cjs` runs the full browser journey against a server on port 8000. This test requires Playwright in the developer environment and Chromium at `/usr/bin/chromium` (or set `CHROMIUM_PATH`). These are test tools only and are not needed by pupils or hosting. See TESTING.md for verified outcomes and remaining device checks.
+`node --check script.js` verifies syntax. `node tests/audio.cjs` verifies recording priority, ducking, cancellation and audio preferences using a test-only WAV response. `node tests/game.cjs` runs the full browser journey against a server on port 8000. This test requires Playwright in the developer environment and Chromium at `/usr/bin/chromium` (or set `CHROMIUM_PATH`). These are test tools only and are not needed by pupils or hosting. See TESTING.md for verified outcomes and remaining device checks.

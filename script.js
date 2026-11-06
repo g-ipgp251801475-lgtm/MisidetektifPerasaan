@@ -55,19 +55,31 @@ const homeAudio={
   setTimeout(()=>{this.musicBlocked=!!(preferences.music&&preferences.musicVolume>0&&audio.ctx&&audio.ctx.state!=='running');this.update();},350);
  },
  startMission(){
-  const playing=!!(audio.voicePlayer&&!audio.voicePlayer.paused);
   this.musicBlocked=false;this.voiceBlocked=false;this.update();
-  // Preserve an already-playing welcome; otherwise start the recording in this click.
-  navigate('map',false,playing);
-  if(!playing&&!this.welcomePlayed)this.requestWelcome();
+  // Map guidance takes priority over any welcome still playing.
+  navigate('map',true);
  }
 };
 function button(label,action,cls='button'){return `<button class="${cls}" data-action="${action}">${label}</button>`;}
 function replay(role,text,key=''){return `<button class="text-button" data-action="narrate" data-role="${role}" data-text="${text}" data-clip="${key}">◖)) Dengar panduan ${role}</button>`;}
 function guide(role,text){return `<aside class="guide"><img src="${portraits[role]}" alt="${role}, pemandu pengembaraan"><div class="guide-content"><strong>${role}</strong><p>${text}</p>${replay(role,guideText[state.page],state.page)}</div></aside>`;}
 function allowed(page){if(page==='level2'&&!state.level1.done)return 'map';if(page==='victory'&&!(state.level1.done&&state.level2.done))return 'map';return ['home','map','level1','level2','victory'].includes(page)?page:'home';}
-function navigate(page,announce=false,preserveVoice=false){sceneTimers.forEach(clearTimeout);sceneTimers=[];if(!preserveVoice)audio.stopVoice();audio.clearEffects();state.page=allowed(page);history.replaceState(null,'','#'+state.page);audio.track=state.page==='victory'?'victory':'forest';save();render();if(announce&&state.page!=='map'){const role=state.page==='level2'?'Bramble':'Briar';audio.speak(guideText[state.page],role,state.page==='home'?'welcome':state.page);}window.scrollTo({top:0,behavior:'instant'});app.focus({preventScroll:true});if(state.page==='victory'&&audio.started)celebrateVictory();}
-function home(){return `<section class="landing"><div class="landing-art"><img src="${IMAGES.home}" alt="Briar, Bramble dan Logger Vick di hutan" fetchpriority="high"></div><div class="landing-title"><h1>Misi Detektif Perasaan</h1><p>Waspada Selalu</p><div class="creator-credit"><span>Disediakan oleh</span> <strong>Cikgu Ong</strong></div></div><div class="landing-actions">${button('MULA MISI','start','button gold start-button')}<p id="home-audio-hint" class="home-audio-hint" role="status" hidden>Tekan MULA MISI untuk memulakan muzik dan suara.</p><button class="welcome-speaker" data-action="welcome" aria-label="Dengar sambutan Briar">♫</button><div class="welcome-bubble" id="welcome-bubble" hidden><p>${guideText.home}</p>${replay('Briar',guideText.home,'welcome')}</div></div></section>`;}
+function enterMapNarration(){
+ audio.start();
+ return audio.speak(guideText.map,'Briar','map');
+}
+function navigate(page,announce=false){
+ const target=allowed(page),enteredMap=target==='map'&&state.page!=='map';
+ // Re-rendering or requesting the current map is not a new entry.
+ if(target==='map'&&state.page==='map'){history.replaceState(null,'','#map');render();return;}
+ sceneTimers.forEach(clearTimeout);sceneTimers=[];audio.stopVoice();audio.clearEffects();
+ state.page=target;history.replaceState(null,'','#'+state.page);audio.track=state.page==='victory'?'victory':'forest';save();render();
+ if(enteredMap)enterMapNarration();
+ else if(announce){const role=state.page==='level2'?'Bramble':'Briar';audio.speak(guideText[state.page],role,state.page==='home'?'welcome':state.page);}
+ window.scrollTo({top:0,behavior:'instant'});app.focus({preventScroll:true});
+ if(state.page==='victory'&&audio.started)celebrateVictory();
+}
+function home(){return `<section class="landing"><div class="landing-art"><img src="${IMAGES.home}" alt="Briar, Bramble dan Logger Vick di hutan" fetchpriority="high"></div><div class="landing-title"><h1>Misi Detektif Perasaan</h1><p>Waspada Selalu</p></div><div class="landing-actions"><div class="start-action">${button('MULA MISI','start','button gold start-button')}<div class="creator-credit"><span>Disediakan oleh</span> <strong>Cikgu Ong</strong></div></div><p id="home-audio-hint" class="home-audio-hint" role="status" hidden>Tekan MULA MISI untuk memulakan muzik dan suara.</p><button class="welcome-speaker" data-action="welcome" aria-label="Dengar sambutan Briar">♫</button><div class="welcome-bubble" id="welcome-bubble" hidden><p>${guideText.home}</p>${replay('Briar',guideText.home,'welcome')}</div></div></section>`;}
 function map(){const a=state.level1.done,b=state.level2.done;const stop=(cls,role,img,title,action,unlocked,done,subtitle)=>`<div class="map-stop ${cls} ${unlocked?'':'locked'} ${cls==='first'&&!a?'start-here':''} ${cls==='second'&&newlyUnlocked===1?'just-unlocked':''} ${cls==='final'&&newlyUnlocked===2?'just-unlocked':''}">${cls==='first'&&!a?'<span class="mission-arrow" aria-hidden="true">↓</span>':''}<img class="map-character" src="${img}" alt="${role}"><button class="wood-sign" data-action="${action}" ${unlocked?'':'disabled'}><small>${subtitle}</small><strong>${title}</strong><span>${done?'✓ Kunci diperoleh':unlocked?'TEROKAI →':'🔒 Terkunci'}</span></button></div>`;return `<div class="section-head"><div><div class="eyebrow">Dua cabaran · Dua kunci</div><h2>Peta Hutan</h2></div>${button('⌂ Laman utama','home','button secondary')}</div><section class="map" aria-label="Dua cabaran dan pusat keselamatan"><svg class="map-route" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true"><path d="M150 420 C250 560 330 180 500 300 S740 540 860 350"/></svg>${stop('first','Briar',IMAGES.briar,'Cabaran Hutan','level1',true,a,'TAHAP 1')}${stop('second','Bramble',IMAGES.bramble,'Susun dan Selesaikan','level2',a,b,'TAHAP 2')}${stop('final','Logger Vick',IMAGES.vick,'Pusat Keselamatan Hutan','victory',a&&b,a&&b,'DESTINASI AKHIR')}</section><div class="map-footer"><span>🗝 ${Number(a)+Number(b)} / 2 kunci · Markah: ${state.level1.score+state.level2.score} / 10</span>${replay('Briar',guideText.map,'map')}</div><p class="hint">1 markah untuk jawapan betul pada cubaan pertama. Kamu boleh mencuba lagi hingga berjaya.</p>${!storageOK?'<p class="hint">Pelayar tidak membenarkan simpanan. Kemajuan kekal sepanjang halaman ini dibuka sahaja.</p>':''}`;}
 function levelHeader(n,title,l){return `${button('← Kembali ke peta','map','text-button back')}<div class="section-head"><div><div class="eyebrow">Tahap ${n} · ${n===1?'Misteri di Hutan':'Teka-teki perkataan'}</div><h2>${title}</h2></div><span class="hint">Soalan ${l.index+1} / 5<br>Markah: ${l.score} / 5</span></div><div class="progress-track" role="progressbar" aria-label="Kemajuan tahap" aria-valuenow="${l.index+Number(l.solved)}" aria-valuemin="0" aria-valuemax="5"><span style="width:${(l.index+Number(l.solved))*20}%"></span></div>`;}
 function completion(n){const l=state['level'+n];return `<section class="result"><div class="eyebrow">Cabaran selesai</div><div class="big-key" aria-hidden="true">🗝</div><h2>${n===1?'Kunci Pertama diperoleh!':'Kunci Kedua diperoleh!'}</h2><p>${n===1?'Tahniah, detektif! Kamu berjaya menyelesaikan Cabaran Hutan. Tahap 2 kini dibuka.':'Syabas! Kamu berjaya menyusun semua ayat dengan betul. Pusat Keselamatan Hutan kini dibuka.'}</p><div class="score-boxes"><div class="score-box"><b>${l.score} / 5</b><small>Betul pada cubaan pertama</small></div><div class="score-box"><b>5 / 5</b><small>Soalan diselesaikan</small></div></div>${button('KEMBALI KE PETA','map')}${button(n===1?'TERUSKAN TAHAP 2':'BUKA PETI KEJAYAAN',n===1?'level2':'victory','button gold')}</section>`;}
@@ -109,4 +121,4 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){audio.paus
 window.addEventListener('pagehide',()=>{audio.pause();});
 // Hash navigation is guarded as well as every visible route.
 window.addEventListener('hashchange',()=>navigate(location.hash.slice(1)||'home'));
-if(location.hash)state.page=allowed(location.hash.slice(1));audio.track=state.page==='victory'?'victory':'forest';render();save();homeAudio.attempt();
+if(location.hash)state.page=allowed(location.hash.slice(1));audio.track=state.page==='victory'?'victory':'forest';render();save();if(state.page==='map')enterMapNarration();else homeAudio.attempt();

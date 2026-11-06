@@ -52,3 +52,12 @@ The reported screenshot matched the previous script (no creator credit) and empt
 - Full game regression passed with the unchanged questions, scoring, progress and recordings.
 
 Existing MP3 and image files are unchanged. These checks demonstrate actual recorded playback under both controlled Chromium policies, not universal browser autoplay permission. Physical mobile autoplay policy may differ; the same start-button fallback remains available.
+
+
+## Title outline, credit relocation and map narration
+
+`node tests/map-entry.cjs` passed with the existing uploaded map-instruction-ms.mp3: start-button entry stops the actual welcome recording and plays map guidance once; returning from Tahap 1, changing the hash route and loading #map directly each play it once. render() and navigate('map') while already on the map preserve the same recording/player. Actual playback advances, music ducks while playing, and normal volume returns after completion. The existing relative map MP3 also loads/plays under a simulated GitHub Pages repository subpath, without test-tone replacement.
+
+Screenshots inspected and layout assertions passed at 320×700, 390×844, 768×900, 1366×768 and 1440×1000. Main title has a 2px forest-green stroke and dark soft shadow while retaining its existing golden colour and typography. Credit is a single line centred on MULA MISI, below the button and outside the title/face area.
+
+The autoplay/fallback suite and full two-level game regression passed. The newer map-entry requirement intentionally supersedes the earlier welcome-preservation behaviour: map guidance now takes priority on entry. All original images and MP3 files are unchanged. Direct published-host playback remains separate from the local/browser-path tests; Pages deployment status is verified through GitHub.

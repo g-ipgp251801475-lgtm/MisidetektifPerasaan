@@ -50,3 +50,9 @@ main:focus{outline:none}.treasure-lock:before{content:"";position:absolute;width
 .creator-credit{display:flex;justify-content:center;align-items:baseline;gap:.35em;white-space:nowrap;font-size:15px;line-height:1.4;margin-top:9px}.creator-credit span,.creator-credit strong{display:inline;font-size:inherit;letter-spacing:.2px;margin:0}.creator-credit span{font-weight:400}.creator-credit strong{font-weight:700;color:#ffe4a0}
 .home-audio-hint{position:absolute;bottom:-51px;left:50%;transform:translateX(-50%);width:330px;max-width:86vw;color:#fff2cd;font-size:12px;text-align:center;margin:0;text-shadow:0 2px 6px #0c321f;background:#143c2be6;border:1px solid #d8cb9060;border-radius:12px;padding:7px 10px;pointer-events:none}
 @media(max-width:700px){.creator-credit{font-size:14px;margin-top:10px;gap:.3em}.creator-credit span,.creator-credit strong{font-size:inherit}.landing-title>p{-webkit-text-stroke:.4px #f6cf83}}
+/* Keep title metrics/position, adding a restrained forest-green outline and depth. */
+.landing h1{-webkit-text-stroke:2px #183a26;paint-order:stroke fill;text-shadow:0 4px 3px #09271999,0 7px 16px #09271980}
+@media(min-width:701px){.landing-title{margin-top:7vh}}
+/* Credit belongs to the start button, not to the title or character area. */
+.start-action{display:flex;flex-direction:column;align-items:center;gap:12px}.start-action .creator-credit{margin:0;font-size:14px;line-height:1.4}.landing-actions{bottom:max(7vh,65px)}.landing-actions .welcome-speaker{align-self:flex-start;margin-top:8px}.welcome-bubble{bottom:calc(100% + 18px)}
+@media(max-width:700px){.landing-actions{bottom:max(12vh,65px)}.start-action{gap:11px}.start-action .creator-credit{font-size:13px}.landing-actions .welcome-speaker{margin-top:7px}}

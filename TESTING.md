@@ -8,7 +8,7 @@
 - Wrong answer → retry modal → same question; correct answer → next. First-attempt scores remain 4/5 + 4/5 = 8/10 after one wrong answer per level.
 - Existing localStorage keys, refresh recovery, partial word arrangements, replay confirmation and punctuation preserved.
 - Homepage title is “Misi Detektif Perasaan” with italic “Waspada Selalu”; title fits desktop and wraps naturally on mobile. Original homepage/background and all character paths unchanged.
-- Automatic feedback requests the correct recorded phrase. Without recordings, the exact missing filename is readable inside the modal. No installed device voices are queried or invoked.
+- Automatic feedback requests the correct recorded phrase. Missing recordings still identify the exact filename inside the modal. No installed device voices are queried or invoked.
 - Music, voice and effect switches/sliders work independently; saved music-volume preference survives replay.
 - Briar/Bramble guide roles, fixed distinct level backgrounds, all active images, enlarged controls and actual two-key chest opening remain functional.
 - Responsive widths 320, 390, 768 and 1440 have no horizontal overflow. Storage denial still permits session play. No failed resource requests for known-missing MP3s and no uncaught browser errors.
@@ -25,17 +25,12 @@
 
 JavaScript syntax and `git diff --check` passed. Screenshot inspection confirms the new title-case homepage without altered images.
 
-## Required recordings still missing
+## Supplied recordings and creator credit
 
-`python3 tools/check-audio.py` intentionally fails while the following actual narration files are absent:
+Nine actual uploaded MP3 recordings are now included. The accidental double `.mp3.mp3` extensions were normalized to the expected lowercase `.mp3` filenames without changing file contents. All six required clips and the three optional map/completion clips pass `tools/check-audio.py`. FFmpeg decodes the full streams; all are 24 kHz mono, 2.02–9.91 seconds, peaks -5.2 to -2.7 dBFS with no digital clipping detected.
 
-1. welcome-briar-ms.mp3
-2. briar-instruction-ms.mp3
-3. bramble-instruction-ms.mp3
-4. correct-answer-ms.mp3
-5. try-again-ms.mp3
-6. victory-ms.mp3
+`node tests/recordings.cjs` passed real loading, decoding, timeline advancement and completion for every supplied clip. The audio-player logic, preference defaults and settings UI were not changed. Voice wording, performer identity and naturalness have not been verified by listening; these are distinct from technical playback checks. Published Pages delivery is also a separate check.
 
-**No actual male Malay narration or deployed MP3 files have been tested.** Temporary test tones prove playback mechanics, not voice gender, language, pronunciation, naturalness, recording quality or deployment. No test tone is included in assets. The exact scripts and future published-file check command are in `assets/audio/README.md`.
+The creator credit is centred below the subtitle, with Cikgu Ong more prominent than Disediakan oleh. Placement checks and screenshots at 320, 390, 768 and 1440 pixels passed; title-area spacing on wider screens keeps the signature above Briar’s face. Main title text, subtitle, homepage artwork, character animation and MULA MISI remain unchanged.
 
-Physical Windows/Android/iOS playback and listening balance must be checked using the supplied real recordings. Browser-size tests are not physical-device compatibility certification. The lighter background music is synthesized, not a recorded acoustic track.
+The full gameplay regression and isolated audio suite both passed after registration of the real recordings. Questions, scores, progress schema, page structure, image mappings and audio settings remain unchanged.

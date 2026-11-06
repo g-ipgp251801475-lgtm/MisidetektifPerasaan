@@ -38,3 +38,10 @@ main:focus{outline:none}.treasure-lock:before{content:"";position:absolute;width
 .landing h1{color:#ffe7a3;font-weight:normal;letter-spacing:-.5px;text-shadow:0 3px 2px #385b32,0 5px 18px #102d1ed9}.landing-title p{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:normal;letter-spacing:1.5px}
 #audio-panel{max-height:calc(100svh - 100px);overflow:auto}#audio-panel .audio-channel{padding-bottom:9px;margin-bottom:9px;border-bottom:1px solid #e2dfcc}#audio-panel .audio-channel label:first-child{font-weight:bold;margin-top:5px}#audio-panel label[for]{font-size:12px;margin-top:4px}#audio-panel input[type=range]{width:100%;accent-color:var(--green);min-height:25px}.recording-status{font-size:12px!important;background:#fff1c9;color:#3c4b31;border:1px solid #ddca8b;border-radius:10px;padding:10px 14px;margin-bottom:14px!important;overflow-wrap:anywhere}
 @media(max-width:700px){.landing h1{font-size:clamp(30px,8vw,44px)}.landing-title p{letter-spacing:1px}}
+
+/* Homepage creator credit: a small two-line signature beneath the unchanged subtitle. */
+.creator-credit{margin-top:14px;color:#fff1ce;text-align:center;font-family:Georgia,'Times New Roman',serif;line-height:1.4;text-shadow:0 2px 8px #173b2c;animation:welcome-in .85s ease-out .3s both}
+.creator-credit span{display:block;font-size:13px;letter-spacing:1px}.creator-credit strong{display:block;font-size:19px;font-weight:600;letter-spacing:.4px;margin-top:2px;color:#ffe4a0}
+@media(max-width:700px){.creator-credit{margin-top:12px}.creator-credit span{font-size:12px}.creator-credit strong{font-size:17px}}
+/* Reserve sky above the characters for the added signature on wider screens. */
+@media(min-width:701px){.landing-title:has(.creator-credit){margin-top:7vh}.creator-credit{margin-top:6px;line-height:1.2}.creator-credit span{font-size:12px}.creator-credit strong{font-size:18px}}

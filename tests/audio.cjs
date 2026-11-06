@@ -11,7 +11,7 @@ const mp3=execFileSync('ffmpeg',['-hide_banner','-loglevel','error','-f','lavfi'
   return route.continue({url:'http://127.0.0.1:8000/'+relative+url.search});
  });
  const page=await context.newPage({viewport:{width:1440,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto('http://127.0.0.1:8000/MisidetektifPerasaan/');await page.evaluate(()=>localStorage.clear());await page.reload();
+ await page.goto('http://127.0.0.1:8000/MisidetektifPerasaan/');await page.evaluate(()=>localStorage.clear());await page.reload();await page.evaluate(()=>{delete GAME_AUDIO.welcome;});
  await page.locator('[data-action="welcome"]').click();
  assert((await page.locator('#voice-status').innerText()).includes('welcome-briar-ms.mp3'));
  assert.equal(await page.evaluate(()=>audio.voicePlayer),null);

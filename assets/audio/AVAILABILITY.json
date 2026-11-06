@@ -2,55 +2,55 @@
   {
     "role": "welcome",
     "filename": "welcome-briar-ms.mp3",
-    "available": false,
+    "available": true,
     "required_narration": true
   },
   {
     "role": "level1",
     "filename": "briar-instruction-ms.mp3",
-    "available": false,
+    "available": true,
     "required_narration": true
   },
   {
     "role": "level2",
     "filename": "bramble-instruction-ms.mp3",
-    "available": false,
+    "available": true,
     "required_narration": true
   },
   {
     "role": "correct",
     "filename": "correct-answer-ms.mp3",
-    "available": false,
+    "available": true,
     "required_narration": true
   },
   {
     "role": "retry",
     "filename": "try-again-ms.mp3",
-    "available": false,
+    "available": true,
     "required_narration": true
   },
   {
     "role": "victory",
     "filename": "victory-ms.mp3",
-    "available": false,
+    "available": true,
     "required_narration": true
   },
   {
     "role": "map",
     "filename": "map-instruction-ms.mp3",
-    "available": false,
+    "available": true,
     "required_narration": false
   },
   {
     "role": "complete1",
     "filename": "level1-complete-ms.mp3",
-    "available": false,
+    "available": true,
     "required_narration": false
   },
   {
     "role": "complete2",
     "filename": "level2-complete-ms.mp3",
-    "available": false,
+    "available": true,
     "required_narration": false
   },
   {

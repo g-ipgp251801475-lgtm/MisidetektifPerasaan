@@ -13,10 +13,10 @@ const assert=require('node:assert/strict');
  assert.equal(await page.evaluate(()=>audio.started),false);
  await page.screenshot({path:'/tmp/misi-redesign-home.png',fullPage:true});
  await click('welcome');assert(await page.locator('#welcome-bubble').isVisible());assert.equal(await page.evaluate(()=>audio.ctx.state),'running');
- // Narration never calls browser/device TTS; missing recordings identify the exact filename.
- assert((await page.locator('#voice-status').innerText()).includes('welcome-briar-ms.mp3'));
+ // Supplied recordings play directly without querying browser/device TTS.
+ await page.waitForFunction(()=>audio.voicePlayer&&!audio.voicePlayer.paused&&audio.voicePlayer.readyState>=2);assert(!(await page.locator('#voice-status').isVisible()));
  await page.evaluate(()=>{window.ttsCalls=0;if('speechSynthesis' in window){speechSynthesis.speak=()=>{ttsCalls++;throw Error('Device TTS must not be used')};speechSynthesis.getVoices=()=>{ttsCalls++;throw Error('Device voices must not be inspected')};}window.voiceRequests=[];const original=audio.speak;audio.speak=function(text,role,key){voiceRequests.push({text,key});return original.call(this,text,role,key)};});
- await click('welcome');assert.equal(await page.evaluate(()=>voiceRequests.at(-1).text),'Hai, detektif muda! Selamat datang ke hutan kami. Bersedia untuk memulakan misi?');assert.equal(await page.evaluate(()=>audio.speaking),false);assert.equal(await page.evaluate(()=>ttsCalls),0);
+ await click('welcome');assert.equal(await page.evaluate(()=>voiceRequests.at(-1).text),'Hai, detektif muda! Selamat datang ke hutan kami. Bersedia untuk memulakan misi?');await page.waitForFunction(()=>audio.speaking);assert.equal(await page.evaluate(()=>ttsCalls),0);await page.evaluate(()=>audio.stopVoice());
  await click('start');assert.equal((await state()).page,'map');assert.equal(await page.locator('.map-character').count(),3);assert(await page.locator('.mission-arrow').isVisible());assert(await page.locator('.map-stop.first').evaluate(el=>el.classList.contains('start-here')));assert(await page.evaluate(()=>audio.windSource.loop));assert(await page.evaluate(()=>audio.timer!==null));
  await page.screenshot({path:'/tmp/misi-redesign-map.png',fullPage:true});
  assert(await page.locator('[data-action="level2"]').isDisabled());assert(await page.locator('[data-action="victory"]').isDisabled());
@@ -26,7 +26,7 @@ const assert=require('node:assert/strict');
  assert(background1.includes('Screenshot (310)(2).png'));await page.evaluate(()=>{preferences.voice=true;window.voiceRequests=[];});
  const expectedStories=['Mei Mei','Aina','Faris','Siti','Ah Sheng'],answers=[1,2,0,3,2];
  await page.screenshot({path:'/tmp/misi-redesign-story.png',fullPage:true});
- await page.locator('[data-answer="0"]').click();await visibleDialog('CUBA LAGI!');assert.equal(await page.evaluate(()=>voiceRequests.at(-1).text),'Cuba Lagi!');assert((await page.locator('#answer-feedback .recording-status').innerText()).includes('try-again-ms.mp3'));assert.equal(await page.evaluate(()=>audio.speaking),false);assert.equal((await state()).level1.score,0);assert.equal(await page.locator('.correct-sentence').count(),0);
+ await page.locator('[data-answer="0"]').click();await visibleDialog('CUBA LAGI!');assert.equal(await page.evaluate(()=>voiceRequests.at(-1).text),'Cuba Lagi!');await page.waitForFunction(()=>audio.voicePlayer&&!audio.voicePlayer.paused&&audio.voicePlayer.readyState>=2);assert(!(await page.locator('#answer-feedback .recording-status').isVisible()));assert.equal((await state()).level1.score,0);assert.equal(await page.locator('.correct-sentence').count(),0);
  await page.screenshot({path:'/tmp/misi-redesign-retry.png',fullPage:true});await click('retry');assert(!(await page.locator('#answer-feedback').isVisible()));
  for(let i=0;i<5;i++){
   assert((await page.locator('.story-scene').innerText()).includes(expectedStories[i]));assert.equal(await page.evaluate(()=>getComputedStyle(document.body).getPropertyValue('--scene')),background1);
@@ -75,5 +75,5 @@ const assert=require('node:assert/strict');
  for(const kind of ['correct','wrong','key','unlock','chest','win'])assert(await page.evaluate(k=>{audio.fx(k);return audio.effectNodes.length>0},kind));
  const blocked=await browser.newContext();await blocked.addInitScript(()=>{Storage.prototype.setItem=()=>{throw Error('blocked')};Storage.prototype.getItem=()=>{throw Error('blocked')};});const p2=await blocked.newPage();await p2.goto('http://127.0.0.1:8000');await p2.locator('[data-action="start"]').click();assert((await p2.locator('main').innerText()).includes('Pelayar tidak membenarkan simpanan'));
  assert.deepEqual(errors,[]);assert.deepEqual(broken,[]);
- console.log('PASS: full redesigned journey, worksheet stories, modal focus/retry/next, scoring, punctuation for all 5 sentences, saved progress, recordings-only narration and missing-file notices, independent audio controls, assets and responsive layouts. All eleven exact originals are present and mapped.');await browser.close();
+ console.log('PASS: full redesigned journey, worksheet stories, modal focus/retry/next, scoring, punctuation for all 5 sentences, saved progress, supplied recordings-only narration, independent audio controls, assets and responsive layouts. All eleven exact originals are present and mapped.');await browser.close();
 })().catch(e=>{console.error(e);process.exit(1)});

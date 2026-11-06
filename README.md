@@ -88,3 +88,7 @@ The game uses responsive layouts and internal navigation, so no additional page 
 `node --check script.js` verifies syntax. `node tests/recordings.cjs` plays all nine supplied recordings and checks creator-credit placement. `node tests/audio.cjs` verifies MP3 playback, ducking, cancellation, missing-file handling and independent volumes using temporary test-tone MP3 responses (FFmpeg required). These are not shipped narration files. `node tests/game.cjs` runs the full browser journey against a server on port 8000. This test requires Playwright in the developer environment and Chromium at `/usr/bin/chromium` (or set `CHROMIUM_PATH`). These are test tools only and are not needed by pupils or hosting. See TESTING.md for verified outcomes and remaining device checks.
 
 The homepage credits “Disediakan oleh” and “Cikgu Ong” beneath the unchanged subtitle, in a small cream/gold serif signature with a reduced-motion-aware fade-in. Other page artwork and gameplay are unchanged.
+
+## Publishing updates without stale assets
+
+Before publishing changed CSS, JavaScript or the audio manifest, run `python3 tools/version-assets.py`. Root asset URLs in index.html receive content hashes, so browsers request the new script/recording manifest instead of mixing them with a prior cached release. `.nojekyll` marks the root as a plain static site. On GitHub, verify the Pages Actions run for the new commit succeeds before claiming it is published. A fresh top-level query URL can also bypass cached HTML without clearing a pupil's saved progress.

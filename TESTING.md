@@ -34,3 +34,9 @@ Nine actual uploaded MP3 recordings are now included. The accidental double `.mp
 The creator credit is centred below the subtitle, with Cikgu Ong more prominent than Disediakan oleh. Placement checks and screenshots at 320, 390, 768 and 1440 pixels passed; title-area spacing on wider screens keeps the signature above Briar’s face. Main title text, subtitle, homepage artwork, character animation and MULA MISI remain unchanged.
 
 The full gameplay regression and isolated audio suite both passed after registration of the real recordings. Questions, scores, progress schema, page structure, image mappings and audio settings remain unchanged.
+
+## Stale release regression
+
+The reported screenshot matched the previous script (no creator credit) and empty audio manifest. GitHub's public Pages Actions page confirmed that commit a1fb71b had successfully deployed, distinguishing stale frontend assets from a missing source commit. Direct access to the Pages host from this environment remains blocked by network policy.
+
+`node tests/release-cache.cjs` reproduced the exact symptoms by serving the old aaeb7ef script/manifest at the unversioned URLs. The updated index.html requests CSS and every root JS file using content hashes. With the stale-cache simulation still active, the new page shows Cikgu Ong, loads all nine manifest entries, and plays the actual welcome MP3. No gameplay, scores, audio settings or existing saved progress were changed by this fix.

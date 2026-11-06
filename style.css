@@ -34,3 +34,7 @@ body[data-page=level1] .level-scenery{display:block;height:240px;margin:0 0 24px
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.flying-key,.treasure-lock{opacity:0}.inside-key,.treasure-glow,.result:has(.treasure-stage) h1{opacity:1}}
 
 main:focus{outline:none}.treasure-lock:before{content:"";position:absolute;width:18px;height:16px;border:4px solid #ffe19b;border-bottom:0;border-radius:14px 14px 0 0;top:-14px;left:6px}
+/* Title-case homepage refinement; keep the original scene and character imagery. */
+.landing h1{color:#ffe7a3;font-weight:normal;letter-spacing:-.5px;text-shadow:0 3px 2px #385b32,0 5px 18px #102d1ed9}.landing-title p{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:normal;letter-spacing:1.5px}
+#audio-panel{max-height:calc(100svh - 100px);overflow:auto}#audio-panel .audio-channel{padding-bottom:9px;margin-bottom:9px;border-bottom:1px solid #e2dfcc}#audio-panel .audio-channel label:first-child{font-weight:bold;margin-top:5px}#audio-panel label[for]{font-size:12px;margin-top:4px}#audio-panel input[type=range]{width:100%;accent-color:var(--green);min-height:25px}.recording-status{font-size:12px!important;background:#fff1c9;color:#3c4b31;border:1px solid #ddca8b;border-radius:10px;padding:10px 14px;margin-bottom:14px!important;overflow-wrap:anywhere}
+@media(max-width:700px){.landing h1{font-size:clamp(30px,8vw,44px)}.landing-title p{letter-spacing:1px}}

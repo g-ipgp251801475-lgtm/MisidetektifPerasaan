@@ -2,56 +2,91 @@
   {
     "role": "welcome",
     "filename": "welcome-briar-ms.mp3",
-    "available": false
+    "available": false,
+    "required_narration": true
   },
   {
     "role": "level1",
     "filename": "briar-instruction-ms.mp3",
-    "available": false
+    "available": false,
+    "required_narration": true
   },
   {
     "role": "level2",
     "filename": "bramble-instruction-ms.mp3",
-    "available": false
+    "available": false,
+    "required_narration": true
   },
   {
     "role": "correct",
     "filename": "correct-answer-ms.mp3",
-    "available": false
+    "available": false,
+    "required_narration": true
   },
   {
     "role": "retry",
     "filename": "try-again-ms.mp3",
-    "available": false
+    "available": false,
+    "required_narration": true
+  },
+  {
+    "role": "victory",
+    "filename": "victory-ms.mp3",
+    "available": false,
+    "required_narration": true
+  },
+  {
+    "role": "map",
+    "filename": "map-instruction-ms.mp3",
+    "available": false,
+    "required_narration": false
+  },
+  {
+    "role": "complete1",
+    "filename": "level1-complete-ms.mp3",
+    "available": false,
+    "required_narration": false
+  },
+  {
+    "role": "complete2",
+    "filename": "level2-complete-ms.mp3",
+    "available": false,
+    "required_narration": false
   },
   {
     "role": "ambience",
     "filename": "forest-ambience.mp3",
-    "available": false
+    "available": false,
+    "required_narration": false
   },
   {
     "role": "correctSound",
     "filename": "correct-sound.mp3",
-    "available": false
+    "available": false,
+    "required_narration": false
   },
   {
     "role": "wrongSound",
     "filename": "incorrect-sound.mp3",
-    "available": false
+    "available": false,
+    "required_narration": false
   },
   {
     "role": "key",
     "filename": "key-collection.mp3",
-    "available": false
+    "available": false,
+    "required_narration": false
   },
   {
     "role": "chest",
     "filename": "treasure-opening.mp3",
-    "available": false
+    "available": false,
+    "required_narration": false
   },
   {
     "role": "win",
     "filename": "mission-complete.mp3",
-    "available": false
+    "available": false,
+    "required_narration": false
   }
 ]

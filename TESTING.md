@@ -1,43 +1,41 @@
-# Visual redesign validation
+# Current validation — recordings-only audio and homepage refinement
 
-Executed against the actual existing game in headless Chromium using `node tests/game.cjs` and a Python static server. Syntax checked using `node --check script.js`. Screenshots were inspected with reduced motion enabled for stable captures.
+## Passed in Chromium
 
-Passed:
-- Minimal homepage contains the requested title, subtitle, MULA MISI and audio/speaker controls; teacher learning introduction is absent.
-- Full two-level journey through all ten questions and both keys to victory.
-- Exactly three map locations, separate character portraits, sequential locks and direct-route guards.
-- Five worksheet situations (Mei Mei, Aina, Faris, Siti, Ah Sheng); one unchanged background throughout each level, different backgrounds between levels.
-- Correct and incorrect answers open prominent native modal dialogs with keyboard focus inside. Retry stays on the same question without revealing the answer. Next advances once; the fifth answer awards the key.
-- First-attempt scoring preserved: one wrong answer in each level gives 4/5 + 4/5 = 8/10. Retry success displays +0 honestly; first-attempt success displays +1. Incomplete word arrangements do not consume an attempt.
-- All five sentence answers display capitalized complete sentences ending in exactly one full stop. Punctuation is appended after submission, never appears as a word tile, and forms part of canonical sentence validation. Complete incorrect submissions also receive the automatic stop without revealing the right word order.
-- Refresh restores solved feedback and partial sentence order. Replay confirmation and audio preferences remain intact.
-- English-only speech environment emits no speech. Injected Malay-voice test explicitly selects ms-MY; each new narration cancels the last one. Real pronunciation remains device-dependent.
-- Music starts after interaction; music, voice, effects and volume controls work; key, unlock, correct, wrong, chest and victory notes are scheduled.
-- No horizontal overflow at 320, 390, 768 and desktop 1440 pixels. Word add/remove interaction and modal retry work at phone/tablet sizes. Mobile scene windows show complete backgrounds without stretching.
-- Every currently active image URL returns 200, visible map images decode, no failed resource responses and no uncaught browser errors during the test journey.
-- Denied localStorage still allows play and shows the session-only notice.
+`node tests/game.cjs` against the Python static server:
 
-## Original image acceptance
+- Complete two-level journey, same five worksheet scenarios and five sentence puzzles, sequential locks, both keys and final victory.
+- Wrong answer → retry modal → same question; correct answer → next. First-attempt scores remain 4/5 + 4/5 = 8/10 after one wrong answer per level.
+- Existing localStorage keys, refresh recovery, partial word arrangements, replay confirmation and punctuation preserved.
+- Homepage title is “Misi Detektif Perasaan” with italic “Waspada Selalu”; title fits desktop and wraps naturally on mobile. Original homepage/background and all character paths unchanged.
+- Automatic feedback requests the correct recorded phrase. Without recordings, the exact missing filename is readable inside the modal. No installed device voices are queried or invoked.
+- Music, voice and effect switches/sliders work independently; saved music-volume preference survives replay.
+- Briar/Bramble guide roles, fixed distinct level backgrounds, all active images, enlarged controls and actual two-key chest opening remain functional.
+- Responsive widths 320, 390, 768 and 1440 have no horizontal overflow. Storage denial still permits session play. No failed resource requests for known-missing MP3s and no uncaught browser errors.
 
-All ten exact filenames are now present in `assets/images/` and mapped to their intended roles. ZIP bytes match extracted source files. The mapping includes eleven roles for ten unique originals because the forest-path image is also used for the map. The optional rafting scene is preserved and is not displayed as a competing background. Active image paths return 200, portraits decode, and no resource requests fail.
+`node tests/audio.cjs` uses a real, temporary MP3 test tone encoded by FFmpeg and served only through Playwright routes:
 
-Inspected all ten images in a contact sheet and checked actual desktop/mobile screenshots of the new homepage, map, story, sentence puzzle, correct and incorrect overlays, and victory page. The second-level card is narrower on desktop to leave the original characters visible. Main backgrounds stay fixed across all five questions per level, and mobile scene windows display the entire image without stretching or cropping faces.
+- All six narration slots actually decode and play through HTMLAudio after interaction at a GitHub Pages-like repository subpath.
+- Narration ducks music/ambience only when playing and restores volume at end/error/cancel.
+- Independent music, voice and effect volumes; narration/effect mute; replay stops the previous clip.
+- A missing recording identifies its filename without requesting a nonexistent URL.
+- A malformed registered recording identifies its filename, restores background volume and invokes no SpeechSynthesis fallback.
+- Valid MP3 playback does not show the previous device-voice warning.
+- HTMLAudio narration plays without AudioContext support, tested at a phone viewport.
 
-Audio balance, actual Malay pronunciation, physical touchscreen behaviour and the published Google Sites iframe still require device checks. Headless tests verify state and scheduling rather than audible quality. Remote source verification is performed separately during publication; local browser tests do not prove a hosted Pages deployment.
+JavaScript syntax and `git diff --check` passed. Screenshot inspection confirms the new title-case homepage without altered images.
 
+## Required recordings still missing
 
-## Final refinement validation
+`python3 tools/check-audio.py` intentionally fails while the following actual narration files are absent:
 
-- Added the exact uploaded `Screenshot (310)(2).png` without altering its bytes. Only the Tahap 1 image mapping changes; other background and character paths remain unchanged.
-- Uppercase desktop homepage title fits one line, mobile wraps at word boundaries, and all pages carry the same two-line identity. Whole-image character animation remains intact.
-- Tahap 1 uses Briar and the exact requested instruction throughout all five questions; Tahap 2 uses Bramble and its exact requested instruction.
-- Enlarged question text/options, guide typography, word tiles, answer zone and action buttons checked in browser. Complete scenic windows preserve all background characters alongside the enlarged cards.
-- Correct/incorrect overlays automatically request the exact Malay phrases; voice mute prevents narration. Malay-only voice selection, previous-utterance cancellation, and narration duck/restore verified with instrumented speech calls.
-- Dedicated `node tests/audio.cjs` passed real HTMLAudio playback with a test-only WAV: recording priority, replay cancellation, narration mute, effects mute, ambience mute, music duck/restore and one-time genuine Malay fallback after a failed recording.
-- Synthesized breeze source loops; bird and occasional dove calls are generated along with the instrumental melody. No missing audio URLs are requested.
-- Map retains its locks and adds the first-station glow/arrow and next-stage unlock animation. Key and unlock sound triggers remain active.
-- Normal-motion browser test confirms the chest lid transforms from closed to open, the lock disappears, and exactly two keys are visible inside. Start/open screenshots inspected. Reduced-motion final state is also open with two visible keys.
-- Full journey still produces 8/10 with one failed first attempt per level, and saves/restores existing progress and audio preferences. All five sentence answers retain automatic punctuation.
-- Phone/tablet widths 320, 390 and 768 checked without horizontal overflow; all active image and source requests succeeded with no uncaught JavaScript errors.
+1. welcome-briar-ms.mp3
+2. briar-instruction-ms.mp3
+3. bramble-instruction-ms.mp3
+4. correct-answer-ms.mp3
+5. try-again-ms.mp3
+6. victory-ms.mp3
 
-No Malay recordings were supplied. Automatic spoken feedback is implemented, but audible pronunciation and voice quality require a device with a Malay voice or the optional recordings. Test-only WAV is not a shipped narration recording. Listening balance and physical-device behaviour remain classroom checks.
+**No actual male Malay narration or deployed MP3 files have been tested.** Temporary test tones prove playback mechanics, not voice gender, language, pronunciation, naturalness, recording quality or deployment. No test tone is included in assets. The exact scripts and future published-file check command are in `assets/audio/README.md`.
+
+Physical Windows/Android/iOS playback and listening balance must be checked using the supplied real recordings. Browser-size tests are not physical-device compatibility certification. The lighter background music is synthesized, not a recorded acoustic track.

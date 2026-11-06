@@ -8,7 +8,7 @@ The existing game now has a minimal animated homepage, immersive map with separa
 
 All ten original redesign images and the additional Tahap 1 image are included unchanged in `assets/images/`, preserving their exact filenames. `image-map.js` assigns them to their intended roles; `assets/IMAGE-MAPPING.json` records the mapping and confirms original availability. Tahap 1 consistently uses `Screenshot (310)(2).png`. The map retains the original forest-path scene; all other scene and character image mappings are unchanged. `Screenshot (310).png` is retained as the optional alternative, without competing with the main scenes. Earlier supplied artwork is retained but is no longer used by the active scenes.
 
-The uppercase title and italic subtitle are consistent throughout. Larger activity cards preserve all existing questions and scores. The map highlights the first challenge; victory animates two keys toward the chest, releases the lock, lifts the lid and leaves both keys visible inside. Reduced-motion users see the final open state immediately.
+The homepage uses title-case “Misi Detektif Perasaan” and italic “Waspada Selalu”; the consistent two-line header remains on all pages. Larger activity cards preserve all existing questions and scores. The map highlights the first challenge; victory animates two keys toward the chest, releases the lock, lifts the lid and leaves both keys visible inside. Reduced-motion users see the final open state immediately.
 
 Run `python3 tools/configure-images.py` only when refreshing the image mapping. No build step is needed for normal play or hosting.
 
@@ -27,11 +27,15 @@ Exactly two challenges: **Cabaran Hutan** (five safety-story questions) and **Su
 
 Each correct first attempt earns one point, maximum 10. Retries remain available until correct, so every pupil can finish. Incomplete sentence submissions do not reduce the score. Progress, unfinished sentence arrangements and completed answers survive refresh when localStorage is available. Replay asks before clearing progress and preserves audio preferences. No pupil identity is collected or transmitted.
 
-## Audio
+## Audio — recordings-only narration
 
-Separate music, narration and effects switches plus volume are available on every page. The original synthesized instrumental is accompanied by gentle wind, periodic birds and an occasional quiet dove-like call. It starts after interaction. Narration automatically lowers music/ambience, cancels previous narration, and restores volume afterward.
+Narration now uses local HTMLAudio MP3 playback only. Device SpeechSynthesis and English fallbacks have been removed. **The six required Malay male recordings have not been supplied yet**, so no consistent male voice is claimed. Missing clips identify the exact filename while written instructions remain visible. The game remains playable without narration.
 
-Briar guides Tahap 1; Bramble guides Tahap 2. Both feedback overlays automatically request their exact Malay phrases and offer replay. There are currently **no supplied Malay recordings**: only a genuine installed Malay browser voice is used, with no English fallback. One generic voice is shared by all character roles; separate character voices are not claimed. If unavailable, read the visible instructions. See `assets/audio/README.md` for all eleven optional filenames, exact dialogue and registration steps. Missing files are not requested.
+Music, voice and effects each have an on/off switch and an independent volume slider. Existing shared-volume preferences migrate without clearing scores or progress. Music and ambience duck while a recording actually plays and restore on stop, finish or error. Welcome/guidance/feedback support replay; correct/incorrect feedback automatically requests its recording. The final narration is “Tahniah! Kamu berjaya menyelesaikan misi!”
+
+Background music is a gentle original major-pentatonic marimba/piano-style synthesized loop with soft wind and occasional bird chirps. Low drones, percussion hits and animal calls were removed. It starts only after interaction and continues across in-page navigation.
+
+See [the exact six required filenames and scripts](assets/audio/README.md). After adding the real recordings, run `python3 tools/configure-audio.py` and `python3 tools/check-audio.py`, test actual playback, then deploy. A published-file byte check is available through the checker's `--base-url` option. The actual male Malay recordings and deployed MP3 URLs remain unverified because the files are missing.
 
 ## Files
 
@@ -44,6 +48,7 @@ audio.js
 audio-assets.js
 tools/configure-images.py
 tools/configure-audio.py
+tools/check-audio.py
 assets/IMAGE-MAPPING.json
 PLAN.md
 README.md
@@ -79,4 +84,4 @@ The game uses responsive layouts and internal navigation, so no additional page 
 
 ## Development checks
 
-`node --check script.js` verifies syntax. `node tests/audio.cjs` verifies recording priority, ducking, cancellation and audio preferences using a test-only WAV response. `node tests/game.cjs` runs the full browser journey against a server on port 8000. This test requires Playwright in the developer environment and Chromium at `/usr/bin/chromium` (or set `CHROMIUM_PATH`). These are test tools only and are not needed by pupils or hosting. See TESTING.md for verified outcomes and remaining device checks.
+`node --check script.js` verifies syntax. `node tests/audio.cjs` verifies MP3 playback, ducking, cancellation, missing-file handling and independent volumes using temporary test-tone MP3 responses (FFmpeg required). These are not shipped narration files. `node tests/game.cjs` runs the full browser journey against a server on port 8000. This test requires Playwright in the developer environment and Chromium at `/usr/bin/chromium` (or set `CHROMIUM_PATH`). These are test tools only and are not needed by pupils or hosting. See TESTING.md for verified outcomes and remaining device checks.

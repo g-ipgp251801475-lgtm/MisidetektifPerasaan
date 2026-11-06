@@ -1,12 +1,41 @@
-// Exercise real HTMLAudio playback/ducking with a test-only WAV response.
-const {chromium}=require('playwright');const assert=require('node:assert/strict');
-function wav(){const rate=16000,n=rate/2,b=Buffer.alloc(44+n*2);b.write('RIFF');b.writeUInt32LE(b.length-8,4);b.write('WAVEfmt ',8);b.writeUInt32LE(16,16);b.writeUInt16LE(1,20);b.writeUInt16LE(1,22);b.writeUInt32LE(rate,24);b.writeUInt32LE(rate*2,28);b.writeUInt16LE(2,32);b.writeUInt16LE(16,34);b.write('data',36);b.writeUInt32LE(n*2,40);for(let i=0;i<n;i++)b.writeInt16LE(Math.round(Math.sin(i/rate*Math.PI*880)*1000),44+i*2);return b;}
-(async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.route('**/test-voice.wav',route=>route.fulfill({contentType:'audio/wav',body:wav()}));await page.goto('http://127.0.0.1:8000');await page.evaluate(()=>{localStorage.clear();});await page.reload();await page.locator('[data-action="welcome"]').click();
-await page.evaluate(()=>{preferences.voice=true;preferences.music=true;window.GAME_AUDIO.welcome='test-voice.wav';audio.speak('Hai','Briar','welcome');});await page.waitForFunction(()=>audio.voicePlayer&&!audio.voicePlayer.paused);assert(await page.evaluate(()=>audio.speaking));await page.waitForFunction(()=>audio.musicGain.gain.value<.1);await page.waitForFunction(()=>!audio.speaking);await page.waitForFunction(()=>audio.musicGain.gain.value>.2);
-// Replaying stops the previous recording; turning voice off prevents playback.
-await page.evaluate(()=>{audio.speak('Hai','Briar','welcome');window.previousVoice=audio.voicePlayer;audio.speak('Hai','Briar','welcome');});assert(await page.evaluate(()=>previousVoice.paused));await page.evaluate(()=>{audio.stopVoice();preferences.voice=false;audio.speak('Hai','Briar','welcome');});assert.equal(await page.evaluate(()=>audio.voicePlayer),null);
-// Ambience continues independently of effects and is controlled by the music switch.
-assert(await page.evaluate(()=>audio.windSource.loop));await page.evaluate(()=>{preferences.effects=false;audio.clearEffects();audio.fx('key');});assert.equal(await page.evaluate(()=>audio.effectNodes.length),0);await page.evaluate(()=>{preferences.music=false;audio.sync();});await page.waitForFunction(()=>audio.ambienceGain.gain.value===0&&audio.musicGain.gain.value===0);
-// A missing/malformed recording uses only a genuine Malay voice, never English.
-await page.evaluate(()=>{preferences.voice=true;window.GAME_AUDIO.correct='data:audio/wav;base64,AA==';window.spoken=[];window.SpeechSynthesisUtterance=function(t){this.text=t};speechSynthesis.cancel=()=>{};speechSynthesis.getVoices=()=>[{lang:'ms-MY'}];speechSynthesis.speak=u=>spoken.push(u.lang+':'+u.text);audio.speak('Syabas! Jawapan Betul!','Bramble','correct');});await page.waitForFunction(()=>spoken.length===1);assert.equal(await page.evaluate(()=>spoken[0]),'ms-MY:Syabas! Jawapan Betul!');await page.evaluate(()=>audio.stopVoice());
-assert.deepEqual(errors,[]);console.log('PASS: real recording priority, automatic duck/restore, replay cancellation, narration mute, effect mute, ambience mute and Malay-only failure fallback.');await browser.close();})().catch(e=>{console.error(e);process.exit(1)});
+// Test tone MP3 is synthesized in memory for codec/playback testing; it is NOT Malay narration.
+// No test tone is shipped in assets or represented as a character recording.
+const {chromium}=require('playwright');const assert=require('node:assert/strict');const {execFileSync}=require('node:child_process');
+const mp3=execFileSync('ffmpeg',['-hide_banner','-loglevel','error','-f','lavfi','-i','sine=frequency=440:duration=0.6','-codec:a','libmp3lame','-q:a','5','-f','mp3','pipe:1']);
+(async()=>{
+ const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});const context=await browser.newContext();
+ // Serve at a GitHub Pages-like subpath to check relative MP3 URLs and capitalization.
+ await context.route('**/MisidetektifPerasaan/**',route=>{
+  const url=new URL(route.request().url()),relative=decodeURIComponent(url.pathname.slice('/MisidetektifPerasaan/'.length));
+  if(relative.startsWith('assets/audio/')&&relative.endsWith('.mp3'))return route.fulfill({contentType:'audio/mpeg',body:mp3});
+  return route.continue({url:'http://127.0.0.1:8000/'+relative+url.search});
+ });
+ const page=await context.newPage({viewport:{width:1440,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('http://127.0.0.1:8000/MisidetektifPerasaan/');await page.evaluate(()=>localStorage.clear());await page.reload();
+ await page.locator('[data-action="welcome"]').click();
+ assert((await page.locator('#voice-status').innerText()).includes('welcome-briar-ms.mp3'));
+ assert.equal(await page.evaluate(()=>audio.voicePlayer),null);
+ await page.evaluate(()=>{preferences.voice=true;preferences.music=true;preferences.musicVolume=40;preferences.voiceVolume=70;preferences.effectsVolume=30;window.deviceCalls=0;if('speechSynthesis' in window){speechSynthesis.speak=()=>{deviceCalls++;throw Error('TTS forbidden')};speechSynthesis.getVoices=()=>{deviceCalls++;throw Error('Device voices forbidden')};}});
+ const clips={welcome:'welcome-briar-ms.mp3',level1:'briar-instruction-ms.mp3',level2:'bramble-instruction-ms.mp3',correct:'correct-answer-ms.mp3',retry:'try-again-ms.mp3',victory:'victory-ms.mp3'};
+ for(const [key,filename] of Object.entries(clips)){
+  await page.evaluate(({key,filename})=>{GAME_AUDIO[key]='assets/audio/'+filename;audio.speak('Ujian main balik MP3','Briar',key)},{key,filename});
+  await page.waitForFunction(()=>audio.voicePlayer&&!audio.voicePlayer.paused&&audio.voicePlayer.readyState>=2);
+  assert(await page.evaluate(()=>audio.speaking));await page.waitForFunction(()=>audio.musicGain.gain.value<.03);
+  assert(Math.abs(await page.evaluate(()=>audio.voicePlayer.volume)-.7)<.001);assert(!(await page.locator('#voice-status').isVisible()));
+  await page.waitForFunction(()=>!audio.speaking);await page.waitForFunction(()=>audio.musicGain.gain.value>.08);
+ }
+ // Independent voice/music/effects volumes and replay cancellation.
+ await page.evaluate(()=>{audio.speak('Ujian','Briar','welcome');window.previousVoice=audio.voicePlayer;audio.speak('Ujian','Briar','welcome');});assert(await page.evaluate(()=>previousVoice.paused));
+ await page.evaluate(()=>{preferences.musicVolume=5;preferences.voiceVolume=85;preferences.effectsVolume=20;audio.sync();});assert(Math.abs(await page.evaluate(()=>audio.voicePlayer.volume)-.85)<.001);assert(Math.abs(await page.evaluate(()=>audio.effectsGain.gain.value)-.2)<.001);
+ await page.evaluate(()=>{audio.stopVoice();preferences.voice=false;audio.speak('Ujian','Briar','welcome');});assert.equal(await page.evaluate(()=>audio.voicePlayer),null);
+ await page.evaluate(()=>{preferences.music=false;audio.sync()});await page.waitForFunction(()=>audio.musicGain.gain.value===0&&audio.ambienceGain.gain.value===0);
+ await page.evaluate(()=>{preferences.effects=false;audio.clearEffects();audio.fx('key')});assert.equal(await page.evaluate(()=>audio.effectNodes.length),0);
+ // Broken audio identifies the file and restores music, without speech fallback.
+ await page.route('**/broken.mp3',route=>route.fulfill({contentType:'audio/mpeg',body:Buffer.from('invalid mp3')}));
+ await page.evaluate(()=>{preferences.voice=true;preferences.music=true;GAME_AUDIO.correct='broken.mp3';audio.speak('Syabas! Jawapan Betul!','Bramble','correct')});
+ await page.waitForFunction(()=>document.querySelector('#voice-status').textContent.includes('tidak dapat dimainkan'));
+ assert((await page.locator('#voice-status').innerText()).includes('correct-answer-ms.mp3'));assert.equal(await page.evaluate(()=>audio.speaking),false);assert.equal(await page.evaluate(()=>deviceCalls),0);
+ // HTMLAudio narration remains independent of Web Audio support.
+ const basic=await context.newPage({viewport:{width:390,height:844}});await basic.addInitScript(()=>{window.AudioContext=undefined;window.webkitAudioContext=undefined});await basic.goto('http://127.0.0.1:8000/MisidetektifPerasaan/');await basic.locator('[data-action="welcome"]').click();await basic.evaluate(()=>{GAME_AUDIO.welcome='assets/audio/welcome-briar-ms.mp3';audio.speak('Ujian','Briar','welcome')});await basic.waitForFunction(()=>audio.voicePlayer&&!audio.voicePlayer.paused&&audio.voicePlayer.readyState>=2);assert.equal(await basic.evaluate(()=>audio.ctx),null);
+ assert.deepEqual(errors,[]);console.log('PASS: MP3 codec/playback for all six slots under a repository subpath, independent volumes, duck/restore, mute, replay cancellation, explicit missing/broken filenames, no TTS calls and HTMLAudio without Web Audio. Test-only tones do not validate real Malay voice quality or deployed recordings.');await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});

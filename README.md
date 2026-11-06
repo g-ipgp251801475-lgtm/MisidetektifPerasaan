@@ -2,6 +2,14 @@
 
 A complete static Bahasa Melayu Tahun 4 educational forest adventure. No account, server-side code, build step, paid API or runtime dependency.
 
+## Visual redesign
+
+The existing game now has a minimal animated homepage, immersive map with separate character stations, fixed distinct level backgrounds, the five worksheet situations, centred modal feedback, and punctuated sentence answers. The two-level structure, keys, first-attempt scores, saved progress and replay are preserved.
+
+All ten new original images are included unchanged in `assets/images/`, preserving their exact filenames. `image-map.js` assigns them to their intended roles; `assets/IMAGE-MAPPING.json` records the mapping and confirms original availability. The forest path also forms the map environment. `Screenshot (310).png` is retained as the optional alternative, without competing with the main scenes. Earlier supplied artwork is retained but is no longer used by the active scenes.
+
+Run `python3 tools/configure-images.py` only when refreshing the image mapping. No build step is needed for normal play or hosting.
+
 ## Play locally
 
 From this folder run `python3 -m http.server 8000`, then open `http://localhost:8000` in a browser. Keep the complete assets directory next to index.html. The Python server is for local development only.
@@ -19,7 +27,7 @@ Each correct first attempt earns one point, maximum 10. Retries remain available
 
 ## Audio
 
-Use the Audio button for separate music, voice and effects switches and a shared volume slider. Music starts after interaction. Music/effects are original browser-generated sounds; voice is generic SpeechSynthesis, not imitation of official actors. Malay voice availability and pronunciation depend on the device. Written instructions always remain visible. See assets/audio/README.md for optional future recording filenames. No recordings are necessary and no broken audio links exist.
+Use the Audio button for separate music, voice and effects switches and a shared volume slider. Music starts after interaction. Music/effects are original browser-generated sounds; voice is generic SpeechSynthesis, not imitation of official actors. An actual installed Malay voice is required: there is no English/default-voice fallback. If none exists, no speech is emitted and written guidance remains visible. The homepage speaker opens Briar’s welcome bubble. Teacher narration has been removed. See assets/audio/README.md for optional future recording filenames. No recordings are necessary and no broken audio links exist.
 
 ## Files
 
@@ -27,6 +35,9 @@ Use the Audio button for separate music, voice and effects switches and a shared
 index.html
 style.css
 script.js
+image-map.js
+tools/configure-images.py
+assets/IMAGE-MAPPING.json
 PLAN.md
 README.md
 TESTING.md
@@ -41,9 +52,10 @@ assets/
   README.txt
   map-illustrations.svg
   audio/README.md
+  images/  # All ten new original PNG files, exact filenames preserved
 ```
 
-All six supplied images retain their original filenames and appearance. The original forest reference is retained as reference artwork. The map illustrations are additional local vector artwork.
+The ten new originals retain their names, proportions and contents. Separate map characters use neat frames to preserve the white backgrounds without damaging the source images. The complete homepage group moves as one image. No generated substitute characters or Internet images are used.
 
 ## Deploy a static website
 

@@ -1,0 +1,68 @@
+[
+  {
+    "role": "home",
+    "required": "Cheerful Forest Adventure Trio(2).png",
+    "path": "assets/images/Cheerful Forest Adventure Trio(2).png",
+    "original_available": true
+  },
+  {
+    "role": "briar",
+    "required": "Screenshot 2026-11-06 192839.png",
+    "path": "assets/images/Screenshot 2026-11-06 192839.png",
+    "original_available": true
+  },
+  {
+    "role": "bramble",
+    "required": "Screenshot 2026-11-06 192945.png",
+    "path": "assets/images/Screenshot 2026-11-06 192945.png",
+    "original_available": true
+  },
+  {
+    "role": "vick",
+    "required": "Screenshot 2026-11-06 193001.png",
+    "path": "assets/images/Screenshot 2026-11-06 193001.png",
+    "original_available": true
+  },
+  {
+    "role": "level1",
+    "required": "Screenshot 2026-11-06 192815.png",
+    "path": "assets/images/Screenshot 2026-11-06 192815.png",
+    "original_available": true
+  },
+  {
+    "role": "map",
+    "required": "Screenshot 2026-11-06 192815.png",
+    "path": "assets/images/Screenshot 2026-11-06 192815.png",
+    "original_available": true
+  },
+  {
+    "role": "alternative",
+    "required": "Screenshot (310).png",
+    "path": "assets/images/Screenshot (310).png",
+    "original_available": true
+  },
+  {
+    "role": "level2",
+    "required": "Screenshot (312).png",
+    "path": "assets/images/Screenshot (312).png",
+    "original_available": true
+  },
+  {
+    "role": "correct",
+    "required": "Screenshot (308).png",
+    "path": "assets/images/Screenshot (308).png",
+    "original_available": true
+  },
+  {
+    "role": "wrong",
+    "required": "Screenshot (309).png",
+    "path": "assets/images/Screenshot (309).png",
+    "original_available": true
+  },
+  {
+    "role": "victory",
+    "required": "Forest Friends Adventure Trio(1).png",
+    "path": "assets/images/Forest Friends Adventure Trio(1).png",
+    "original_available": true
+  }
+]

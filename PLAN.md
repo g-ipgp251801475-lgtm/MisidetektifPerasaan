@@ -16,3 +16,13 @@ Each item gives one point only when correct on its first attempt (10 maximum). A
 
 ## Completion
 All four milestones implemented. Full browser journey passes after fixing refresh URL persistence. Phone/tablet layouts, storage fallback, image paths, score calculations, locks and audio scheduling validated. See TESTING.md for evidence and device-specific checks. Running, publishing and embedding instructions are in README.md.
+
+## Visual redesign (current)
+Preserve existing project, two levels, keys, localStorage and first-attempt scores. Replace homepage with minimal cinematic scene, forest map with separate character stations, consistent distinct backgrounds for each level, worksheet scenarios, modal feedback and automatically punctuated sentences. Remove teacher voice; speak only when an actual Malay voice is installed. Test full journey, dialogs, retries, points, focus, images and responsive layouts.
+
+Asset prerequisite: ten images are visible in the conversation but the original files are not accessible in /workspace. Exact intended filenames are recorded in tools/configure-images.py. Existing supplied artwork is used temporarily, without renaming it or claiming it is the new artwork. Run the asset configuration script after the original files arrive. Exact-image acceptance remains pending until then.
+
+Redesign implementation and browser validation now pass using explicitly temporary earlier supplied images. Tests cover both full levels, modal focus/retry/next, first-attempt points, punctuation, persistence, Malay-only speech selection, image loading and responsive layouts. Final acceptance and publishing are blocked solely on receiving the ten original image files and verifying their intended scene framing.
+
+## Original asset integration completed
+Received the ten-image ZIP, inspected each original, preserved filenames and file bytes, and activated all exact mappings. The optional rafting image remains unused. Full functional and responsive validation passed with the new originals. No additional levels or scoring changes were introduced.

@@ -1,22 +1,26 @@
-# Validation report
+# Visual redesign validation
 
-Executed in headless Chromium with Playwright against the local Python static server.
+Executed against the actual existing game in headless Chromium using `node tests/game.cjs` and a Python static server. Syntax checked using `node --check script.js`. Screenshots were inspected with reduced motion enabled for stable captures.
 
 Passed:
-- JavaScript syntax check (`node --check script.js`).
-- Complete homepage → map → five story questions → first key → five sentence puzzles → second key → victory journey.
-- Direct navigation to locked Tahap 2 and victory returns to the map; locked buttons are disabled.
-- Wrong story answer and incorrect sentence order produce retry feedback; corrected answers permit progress.
-- One wrong first attempt per level produces 4/5 + 4/5 = 8/10; no extra points from retries.
-- Refresh preserves a solved story answer and unfinished sentence order. Fixed an old-hash navigation issue discovered during testing.
-- All six supplied PNG paths return HTTP 200; supplied image dimensions and contents inspected.
-- AudioContext starts after MULA MISI; looping music timer starts, music mute reaches zero gain, independent voice/effects controls and volume changes persist.
-- Correct, incorrect, key, unlock, chest and victory effects each schedule oscillator notes.
-- Narration requests use ms-MY and cancel the previous utterance; navigation cancels narration. This check uses instrumented speech calls rather than asserting audible output.
-- Victory switches to the victory music sequence.
-- Replay cancellation preserves progress; confirmed replay resets it and retains audio preferences.
-- No horizontal overflow on home, map and both active challenges at widths 320, 390 and 768 pixels; desktop screenshots inspected at 1440 pixels. Mobile map and desktop victory screenshots inspected.
-- Denied localStorage does not crash the game; a visible notice explains session-only progress.
-- No uncaught browser JavaScript errors during the journey.
+- Minimal homepage contains the requested title, subtitle, MULA MISI and audio/speaker controls; teacher learning introduction is absent.
+- Full two-level journey through all ten questions and both keys to victory.
+- Exactly three map locations, separate character portraits, sequential locks and direct-route guards.
+- Five worksheet situations (Mei Mei, Aina, Faris, Siti, Ah Sheng); one unchanged background throughout each level, different backgrounds between levels.
+- Correct and incorrect answers open prominent native modal dialogs with keyboard focus inside. Retry stays on the same question without revealing the answer. Next advances once; the fifth answer awards the key.
+- First-attempt scoring preserved: one wrong answer in each level gives 4/5 + 4/5 = 8/10. Retry success displays +0 honestly; first-attempt success displays +1. Incomplete word arrangements do not consume an attempt.
+- All five sentence answers display capitalized complete sentences ending in exactly one full stop. Punctuation is appended after submission, never appears as a word tile, and forms part of canonical sentence validation. Complete incorrect submissions also receive the automatic stop without revealing the right word order.
+- Refresh restores solved feedback and partial sentence order. Replay confirmation and audio preferences remain intact.
+- English-only speech environment emits no speech. Injected Malay-voice test explicitly selects ms-MY; each new narration cancels the last one. Real pronunciation remains device-dependent.
+- Music starts after interaction; music, voice, effects and volume controls work; key, unlock, correct, wrong, chest and victory notes are scheduled.
+- No horizontal overflow at 320, 390, 768 and desktop 1440 pixels. Word add/remove interaction and modal retry work at phone/tablet sizes. Mobile scene windows show complete backgrounds without stretching.
+- Every currently active image URL returns 200, visible map images decode, no failed resource responses and no uncaught browser errors during the test journey.
+- Denied localStorage still allows play and shows the session-only notice.
 
-Device checks still needed: listen to music balance and Malay pronunciation on the classroom device, test touch on physical phones/tablets, and test the published Google Sites iframe. Headless browser tests verify playback state and scheduling, not the quality of audible output. No hosted deployment or published Google Site is claimed.
+## Original image acceptance
+
+All ten exact filenames are now present in `assets/images/` and mapped to their intended roles. ZIP bytes match extracted source files. The mapping includes eleven roles for ten unique originals because the forest-path image is also used for the map. The optional rafting scene is preserved and is not displayed as a competing background. Active image paths return 200, portraits decode, and no resource requests fail.
+
+Inspected all ten images in a contact sheet and checked actual desktop/mobile screenshots of the new homepage, map, story, sentence puzzle, correct and incorrect overlays, and victory page. The second-level card is narrower on desktop to leave the original characters visible. Main backgrounds stay fixed across all five questions per level, and mobile scene windows display the entire image without stretching or cropping faces.
+
+Audio balance, actual Malay pronunciation, physical touchscreen behaviour and the published Google Sites iframe still require device checks. Headless tests verify state and scheduling rather than audible quality. Remote source verification is performed separately during publication; local browser tests do not prove a hosted Pages deployment.

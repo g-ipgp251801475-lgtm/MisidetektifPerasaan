@@ -26,7 +26,7 @@ window.createGameAudio = function (getPreferences) {
         } else this.makeWind();
       } catch { /* Written guidance and the game remain available without audio. */ }
     },
-    start() { this.started = true; this.init(); this.sync(); },
+    start() { const first=!this.ctx; this.started = true; this.init(); if(first&&this.ctx?.state==='suspended')this.ctx.resume().catch(()=>{}); this.sync(); },
     makeWind() {
       if (!this.ctx || this.windSource) return;
       const buffer = this.ctx.createBuffer(1, this.ctx.sampleRate * 4, this.ctx.sampleRate);
@@ -150,7 +150,7 @@ window.createGameAudio = function (getPreferences) {
       this.duck(false);
     },
     speak(text, role='Briar', clipKey) {
-      this.stopVoice();this.clearVoiceNotice();
+      this.stopVoice();this.clearVoiceNotice();this.lastVoiceFailure=null;
       if(!getPreferences().voice||getPreferences().voiceVolume===0)return;
       const filename=expected[clipKey]||'rakaman-panduan-ms.mp3';
       if(!files[clipKey]){
@@ -167,7 +167,7 @@ window.createGameAudio = function (getPreferences) {
       };
       const fail=(error)=>{
         if(finished||generation!==this.voiceGeneration)return;
-        player.pause();finish();
+        player.pause();finish();this.lastVoiceFailure=error?.name==='NotAllowedError'?'blocked':'file';
         this.voiceNotice(error?.name==='NotAllowedError'
           ? `Pelayar menyekat audio. Tekan butang dengar untuk memainkan ${filename}.`
           : `Rakaman tidak dapat dimainkan: ${filename}. Semak fail audio; baca panduan pada skrin.`);
@@ -176,10 +176,11 @@ window.createGameAudio = function (getPreferences) {
       player.onplaying=()=>{if(generation===this.voiceGeneration){clearTimeout(this.loadTimer);this.clearVoiceNotice();this.duck(true);}};
       this.loadTimer=setTimeout(()=>fail(),15000);
       // Duck only when playback actually starts, not while a missing file is loading.
-      player.play().catch(fail);
+      return player.play().then(()=>generation===this.voiceGeneration).catch(error=>{fail(error);return false;});
       // role labels the on-screen character; voice identity comes only from the supplied recording.
     },
     pause() {
+      this.wasRunning=!!(this.ctx&&this.ctx.state==='running');
       this.stopVoice(); this.clearEffects();
       if (this.ambiencePlayer) this.ambiencePlayer.pause();
       if (this.ctx) this.ctx.suspend().catch(() => {});

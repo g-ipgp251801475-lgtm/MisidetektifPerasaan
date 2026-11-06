@@ -40,3 +40,15 @@ The full gameplay regression and isolated audio suite both passed after registra
 The reported screenshot matched the previous script (no creator credit) and empty audio manifest. GitHub's public Pages Actions page confirmed that commit a1fb71b had successfully deployed, distinguishing stale frontend assets from a missing source commit. Direct access to the Pages host from this environment remains blocked by network policy.
 
 `node tests/release-cache.cjs` reproduced the exact symptoms by serving the old aaeb7ef script/manifest at the unversioned URLs. The updated index.html requests CSS and every root JS file using content hashes. With the stale-cache simulation still active, the new page shows Cikgu Ong, loads all nine manifest entries, and plays the actual welcome MP3. No gameplay, scores, audio settings or existing saved progress were changed by this fix.
+
+
+## Homepage typography and autoplay refinement
+
+`node tests/homepage-audio.cjs` passed with the actual existing welcome-briar-ms.mp3:
+- Chromium permitted-autoplay policy: AudioContext runs, recorded welcome advances, music ducks, and clicking MULA MISI preserves the same welcome player, music context and timer while navigating to the map. No duplicate recorded playback.
+- Chromium blocked-autoplay policy: exactly one initial MP3 play and one resume attempt, a visible MULA MISI hint, no automatic retries, then actual MP3/music playback after clicking the existing start button. No separate Audio-button interaction required.
+- Saved mute preferences are respected; live muted channels do not show a misleading fallback prompt.
+- Title-case bold serif title, italic stroked subtitle, and one-line credit are centred at 320/390/768/1440 pixels. Screenshots inspected; no horizontal overflow or collision with subtitle/start button.
+- Full game regression passed with the unchanged questions, scoring, progress and recordings.
+
+Existing MP3 and image files are unchanged. These checks demonstrate actual recorded playback under both controlled Chromium policies, not universal browser autoplay permission. Physical mobile autoplay policy may differ; the same start-button fallback remains available.

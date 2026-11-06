@@ -33,7 +33,7 @@ Narration now uses local HTMLAudio MP3 playback only. Device SpeechSynthesis and
 
 Music, voice and effects each have an on/off switch and an independent volume slider. Existing shared-volume preferences migrate without clearing scores or progress. Music and ambience duck while a recording actually plays and restore on stop, finish or error. Welcome/guidance/feedback support replay; correct/incorrect feedback automatically requests its recording. The final narration is “Tahniah! Kamu berjaya menyelesaikan misi!”
 
-Background music is a gentle original major-pentatonic marimba/piano-style synthesized loop with soft wind and occasional bird chirps. Low drones, percussion hits and animal calls were removed. It starts only after interaction and continues across in-page navigation.
+Background music is a gentle original major-pentatonic marimba/piano-style synthesized loop with soft wind and occasional bird chirps. Low drones, percussion hits and animal calls were removed. The homepage attempts music and the existing welcome recording once on load, respecting saved mute settings. When autoplay is blocked, a clear prompt points to MULA MISI; that same click starts the audio and enters the map. An already-playing welcome is preserved rather than duplicated. Music continues across in-page navigation.
 
 See [the exact six required filenames and scripts](assets/audio/README.md). After adding the real recordings, run `python3 tools/configure-audio.py` and `python3 tools/check-audio.py`, test actual playback, then deploy. A published-file byte check is available through the checker's `--base-url` option. All nine real MP3s pass local decode and browser playback checks. Voice wording/style and published Pages playback are separate listening/deployment checks.
 
@@ -85,9 +85,9 @@ The game uses responsive layouts and internal navigation, so no additional page 
 
 ## Development checks
 
-`node --check script.js` verifies syntax. `node tests/recordings.cjs` plays all nine supplied recordings and checks creator-credit placement. `node tests/audio.cjs` verifies MP3 playback, ducking, cancellation, missing-file handling and independent volumes using temporary test-tone MP3 responses (FFmpeg required). These are not shipped narration files. `node tests/game.cjs` runs the full browser journey against a server on port 8000. This test requires Playwright in the developer environment and Chromium at `/usr/bin/chromium` (or set `CHROMIUM_PATH`). These are test tools only and are not needed by pupils or hosting. See TESTING.md for verified outcomes and remaining device checks.
+`node --check script.js` verifies syntax. `node tests/homepage-audio.cjs` verifies real welcome playback under permitted/blocked autoplay policies, one-shot attempts, click fallback, mute, duplicate prevention and responsive typography. `node tests/recordings.cjs` plays all nine supplied recordings and checks creator-credit placement. `node tests/audio.cjs` verifies MP3 playback, ducking, cancellation, missing-file handling and independent volumes using temporary test-tone MP3 responses (FFmpeg required). These are not shipped narration files. `node tests/game.cjs` runs the full browser journey against a server on port 8000. This test requires Playwright in the developer environment and Chromium at `/usr/bin/chromium` (or set `CHROMIUM_PATH`). These are test tools only and are not needed by pupils or hosting. See TESTING.md for verified outcomes and remaining device checks.
 
-The homepage credits “Disediakan oleh” and “Cikgu Ong” beneath the unchanged subtitle, in a small cream/gold serif signature with a reduced-motion-aware fade-in. Other page artwork and gameplay are unchanged.
+The homepage credits “Disediakan oleh Cikgu Ong” on one horizontal line beneath the italic subtitle, in a small cream/gold serif signature with a reduced-motion-aware fade-in. Other page artwork and gameplay are unchanged.
 
 ## Publishing updates without stale assets
 

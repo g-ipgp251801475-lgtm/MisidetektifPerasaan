@@ -10,7 +10,7 @@ const assert=require('node:assert/strict');
  const visibleDialog=async title=>{assert(await page.locator('#answer-feedback').isVisible());assert.equal(await page.locator('#feedback-title').innerText(),title);assert(await page.evaluate(()=>document.querySelector('#answer-feedback').contains(document.activeElement)));};
  await page.goto('http://127.0.0.1:8000');await page.evaluate(()=>localStorage.clear());await page.reload();
  assert.equal(await page.locator('h1').innerText(),'Misi Detektif Perasaan');assert.equal(await page.locator('.landing-title p').innerText(),'Waspada Selalu');assert.equal(await page.locator('.learning').count(),0);assert(await page.locator('.brand').isVisible());assert.equal(await page.locator('.brand-lines>span').innerText(),'MISI DETEKTIF PERASAAN');assert.equal(await page.locator('.brand small').innerText(),'WASPADA SELALU');assert(await page.locator('.landing h1').evaluate(el=>el.getBoundingClientRect().height<parseFloat(getComputedStyle(el).fontSize)*1.5));
- assert.equal(await page.evaluate(()=>audio.started),false);
+ assert.equal(await page.evaluate(()=>audio.started),true);
  await page.screenshot({path:'/tmp/misi-redesign-home.png',fullPage:true});
  await click('welcome');assert(await page.locator('#welcome-bubble').isVisible());assert.equal(await page.evaluate(()=>audio.ctx.state),'running');
  // Supplied recordings play directly without querying browser/device TTS.

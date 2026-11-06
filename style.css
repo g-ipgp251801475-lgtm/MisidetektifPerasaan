@@ -45,3 +45,8 @@ main:focus{outline:none}.treasure-lock:before{content:"";position:absolute;width
 @media(max-width:700px){.creator-credit{margin-top:12px}.creator-credit span{font-size:12px}.creator-credit strong{font-size:17px}}
 /* Reserve sky above the characters for the added signature on wider screens. */
 @media(min-width:701px){.landing-title:has(.creator-credit){margin-top:7vh}.creator-credit{margin-top:6px;line-height:1.2}.creator-credit span{font-size:12px}.creator-credit strong{font-size:18px}}
+/* Homepage typography and single-line creator signature. Existing image animation is unchanged. */
+.landing h1{font-weight:700;color:#ffe7a3;text-shadow:0 2px 1px #385130,0 5px 17px #163520c9;animation:none}.landing-title{animation:welcome-in .9s ease-out both}.landing-title>p{-webkit-text-stroke:.55px #f6cf83;paint-order:stroke fill;color:#ffe19b;font-weight:500;text-shadow:0 2px 2px #3d4827,0 4px 12px #102d1ec9}
+.creator-credit{display:flex;justify-content:center;align-items:baseline;gap:.35em;white-space:nowrap;font-size:15px;line-height:1.4;margin-top:9px}.creator-credit span,.creator-credit strong{display:inline;font-size:inherit;letter-spacing:.2px;margin:0}.creator-credit span{font-weight:400}.creator-credit strong{font-weight:700;color:#ffe4a0}
+.home-audio-hint{position:absolute;bottom:-51px;left:50%;transform:translateX(-50%);width:330px;max-width:86vw;color:#fff2cd;font-size:12px;text-align:center;margin:0;text-shadow:0 2px 6px #0c321f;background:#143c2be6;border:1px solid #d8cb9060;border-radius:12px;padding:7px 10px;pointer-events:none}
+@media(max-width:700px){.creator-credit{font-size:14px;margin-top:10px;gap:.3em}.creator-credit span,.creator-credit strong{font-size:inherit}.landing-title>p{-webkit-text-stroke:.4px #f6cf83}}
